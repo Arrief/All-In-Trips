@@ -18,15 +18,21 @@ function App() {
   
   // Function to get API results for the city from the text input, on button click:
   const getCityCoordinates = function(input) {
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=3&appid=fab801f7e2e8bfaec7313b7ef6c6719a`)
+    // first get geo-coordinates from Geocoding API according to user input
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=fab801f7e2e8bfaec7313b7ef6c6719a`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       setCityData(data);
-      setApiLoaded(true);
-      // emptying the input field by resetting the state variable after getting the API results
-      setUserDestination("");
+      // second get weather for today and next 7 days from OpenWeather API
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=fab801f7e2e8bfaec7313b7ef6c6719a&units=metric`)
+      .then((response) => response.json())
+      .then((data2) => {
+          setWeatherData(data2);
+          setApiLoaded(true);
+      });
     });
+    // emptying the input field by resetting the state variable after getting the API results
+    setUserDestination("");
   }
 
   return (
@@ -39,11 +45,29 @@ function App() {
       <button onClick={() => getCityCoordinates(userDestination)}>Go!</button>
       {/* Displaying API results only if user searched at least once */}
       {apiLoaded === true 
-        ? <p>Name: {cityData[0].name} // Lat: {cityData[0].lat} // Long: {cityData[0].lon}</p> 
+        ? <>
+            <p><b>Name:</b> {cityData[0].name} | <b>Lat:</b> {cityData[0].lat} | <b>Long:</b> {cityData[0].lon}</p>
+            <p><b>Weather:</b> {weatherData.current.weather[0].main}, {weatherData.current.weather[0].description} | <b>Temperature:</b> {weatherData.current.temp}°</p>
+            <img src={`http://openweathermap.org/img/wn/${weatherData.current.weather[0].icon}.png`}
+            alt={weatherData.current.weather[0].description}/>
+            {/* Mapping over array with weather forecast */}
+            {weatherData.daily.map((element, index) => 
+            <div>
+            <p key={index}>Temp: {element.temp.day}° | Min: {element.temp.min}° | Max: {element.temp.max}°</p>
+            <p>Weather: {element.weather[0].main}, {element.weather[0].description}</p>
+            <img src={`http://openweathermap.org/img/wn/${element.weather[0].icon}.png`} />
+            </div>
+            )}
+          </>
         : <p>You did not search for anything yet.</p>
       }
     </div>
   );
 }
+
+
+/*URL for one-call current & forecast: 
+https://api.openweathermap.org/data/2.5/onecall?lat=52.517&lon=13.3889&exclude=minutely,hourly&appid=fab801f7e2e8bfaec7313b7ef6c6719a&units=metric
+*/
 
 export default App;
