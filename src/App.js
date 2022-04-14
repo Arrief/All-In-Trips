@@ -19,12 +19,12 @@ function App() {
   // Function to get API results for the city from the text input, on button click:
   const getCityCoordinates = function(input) {
     // first get geo-coordinates from Geocoding API according to user input
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=fab801f7e2e8bfaec7313b7ef6c6719a`)
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${process.env.REACT_APP_APIKEY}`)
     .then((response) => response.json())
     .then((data) => {
       setCityData(data);
       // second get weather for today and next 7 days from OpenWeather API
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=fab801f7e2e8bfaec7313b7ef6c6719a&units=metric`)
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_APIKEY}&units=metric`)
       .then((response) => response.json())
       .then((data2) => {
           setWeatherData(data2);
@@ -34,6 +34,21 @@ function App() {
     // emptying the input field by resetting the state variable after getting the API results
     setUserDestination("");
   }
+
+  function timeConverter(UNIX_timestamp) {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    // var hour = a.getHours();
+    // var min = a.getMinutes();
+    // var sec = a.getSeconds();
+    var time = date + ' ' + month + ' ' + year;
+    //[year] + ' ' + hour + ':' + min + ':' + sec 
+    return time;
+  }
+
 
   return (
     <div className="App">
@@ -51,10 +66,12 @@ function App() {
             <img src={`http://openweathermap.org/img/wn/${weatherData.current.weather[0].icon}.png`}
             alt={weatherData.current.weather[0].description}/>
             {/* Mapping over array with weather forecast */}
+            <h1>Forecast</h1>
             {weatherData.daily.map((element, index) => 
-            <div>
-            <p key={index}>Temp: {element.temp.day}° | Min: {element.temp.min}° | Max: {element.temp.max}°</p>
-            <p>Weather: {element.weather[0].main}, {element.weather[0].description}</p>
+            <div key={index}>
+            <p>Date: {timeConverter(element.dt)}</p>
+            <p>Temp: {element.temp.day}° | Min: {element.temp.min}° | Max: {element.temp.max}°</p>
+            <p>Date:{element.daily.dt} | Weather: {element.weather[0].main}, {element.weather[0].description}</p>
             <img src={`http://openweathermap.org/img/wn/${element.weather[0].icon}.png`} />
             </div>
             )}
