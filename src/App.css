@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+
+.section-btn {
+  background-color: black;
+  border: solid black 2px;
+  color: white;
+  font-size: 36px;
+  padding: 10px;
+  margin: 10px;
+}
