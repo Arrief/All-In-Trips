@@ -19,12 +19,12 @@ function App() {
   // Function to get API results for the city from the text input, on button click:
   const getCityCoordinates = function(input) {
     // first get geo-coordinates from Geocoding API according to user input
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${process.env.REACT_APP_APIKEY}`)
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${process.env.REACT_APP_WEATHERKEY}`)
     .then((response) => response.json())
     .then((data) => {
       setCityData(data);
       // second get weather for today and next 7 days from OpenWeather API
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_APIKEY}&units=metric`)
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`)
       .then((response) => response.json())
       .then((data2) => {
           setWeatherData(data2);
@@ -58,11 +58,12 @@ function App() {
       <input type="text" value={userDestination} onChange={handleInput}></input>
       {/* Button click sends userDestination as argument to function getCityCoordinates for API call */}
       <button onClick={() => getCityCoordinates(userDestination)}>Go!</button>
+
       {/* Displaying API results only if user searched at least once */}
       {apiLoaded === true 
         ? <>
-            <p><b>Name:</b> {cityData[0].name} | <b>Lat:</b> {cityData[0].lat} | <b>Long:</b> {cityData[0].lon}</p>
-            <p><b>Weather:</b> {weatherData.current.weather[0].main}, {weatherData.current.weather[0].description} | <b>Temperature:</b> {weatherData.current.temp}°</p>
+            <p><b>City:</b> {cityData[0].name} | <b>Lat:</b> {cityData[0].lat} | <b>Long:</b> {cityData[0].lon}</p>
+            <p><b>Sky:</b> {weatherData.current.weather[0].main}, {weatherData.current.weather[0].description} | <b>Temperature:</b> {weatherData.current.temp}°</p>
             <img src={`http://openweathermap.org/img/wn/${weatherData.current.weather[0].icon}.png`}
             alt={weatherData.current.weather[0].description}/>
             {/* Mapping over array with weather forecast */}
@@ -71,7 +72,7 @@ function App() {
             <div key={index}>
             <p>Date: {timeConverter(element.dt)}</p>
             <p>Temp: {element.temp.day}° | Min: {element.temp.min}° | Max: {element.temp.max}°</p>
-            <p>Date:{element.daily.dt} | Weather: {element.weather[0].main}, {element.weather[0].description}</p>
+            <p>Sky: {element.weather[0].main}, {element.weather[0].description}</p>
             <img src={`http://openweathermap.org/img/wn/${element.weather[0].icon}.png`} />
             </div>
             )}
@@ -81,6 +82,55 @@ function App() {
     </div>
   );
 }
+
+// const Hotels = function() {
+//   let [hotelData, setHotelData] = useState({});
+//   let [apiLoaded, setApiLoaded] = useState(false);
+
+//   // options for API fetch
+//   const options = {
+//     method: 'GET',
+//     headers: {
+//       'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
+//       'X-RapidAPI-Key': REACT_APP_HOTELKEY
+//     }
+//   };
+  
+//   // display when site loads, needs to be changed to button click eventually!
+//   const getHotels = function() {
+//   fetch('https://booking-com.p.rapidapi.com/v1/hotels/search-by-coordinates?longitude=-73.935242&latitude=40.73061&checkin_date=2022-09-30&locale=en-gb&filter_by_currency=AED&checkout_date=2022-10-01&room_number=1&units=metric&adults_number=2&order_by=popularity&include_adjacency=true&page_number=0&categories_filter_ids=class%3A%3A2%2Cclass%3A%3A4%2Cfree_cancellation%3A%3A1&children_ages=5%2C0&children_number=2', options)
+//     .then(response => response.json())
+//     .then(data => {
+//       setHotelData(data);
+//       // setHotelData(.result[0].address);
+//       setApiLoaded(true);
+//     })
+//     .catch(err => console.error(err));
+//   };
+
+
+//   return (
+//     <div className='visa-container'>
+//       <video src='/videos/video-hotel.mp4' autoPlay loop muted />
+//       <div className='visa-text'>
+//         <br />
+//         <h1>Hotels</h1>
+//         {/* If API is not loaded, display Loading Hotels, else show list of addresses */}
+//       { apiLoaded === true 
+//       ? hotelData.result.map((element, index) => {
+//         return <p key={index}>{element.address}</p>
+//         })
+//       : <p>Loading Hotels...</p>
+//       }
+//       <hr />
+//          <h3>Where do you want to go?</h3>
+//          <button onClick={() => getHotels()}>Go!</button>
+//          <br />
+//          <br />
+//          </div>
+//   </div>
+//   )
+// }
 
 
 /*URL for one-call current & forecast: 
