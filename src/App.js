@@ -124,9 +124,8 @@ fetch(`https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&
     .then((response) => response.json())
     .then((coordsDestination) => {
       setCityData(coordsDestination);
-      setDestinationCoords(coordsDestination)
       // first, get weather for today and next 7 days from OpenWeather API with the coordinates
-      getWeather(coordsDestination)
+      getWeather(coordsDestination);
       // second, use geo-coordinates from data to search hotel API with getHotels function
       // ! getHotels(coordsDestination);
        // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
@@ -175,6 +174,10 @@ fetch(`https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&
           <input type="text" value={userDestination} onChange={handleInput} placeholder="To..." id="to"></input>
           {/* Button click sends userDestination as argument to function getCityInfo for API call */}
           <button>Go!</button>
+
+          <h1></h1>
+
+
         </form>
         {/* Displaying API results only if user searched at least once */}
         {apiLoaded == true &&
@@ -214,9 +217,7 @@ fetch(`https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&
   {currentSection === "flights" && 
      <>
       {apiLoaded === true 
-        ? airportData.map((airport, index) => (
-        <p key={index}><b>Name:</b> {airport.name} | <b>IATA:</b> {airport.iata}</p>
-        ))
+        ? <p><b>From:</b> {flightsResult.cityFrom} | <b>To:</b> {flightsResult.cityTo} | <b>Price: {flightsResult.conversion.EUR}</b></p>
         :<p>You did not search for anything yet.</p>
       }
     </>
