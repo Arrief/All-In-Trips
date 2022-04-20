@@ -3,10 +3,12 @@ import './App.css';
 
 function App() {
   // states for user destination and all the API data:
+  let [userOrigin, setUserOrigin] = useState("");
   let [userDestination, setUserDestination] = useState("");
   let [cityData, setCityData] = useState({});
   let [weatherData, setWeatherData] = useState({});
   let [hotelData, setHotelData] = useState({});
+  let [airportData, setAirportData] = useState({});
  
   // states for handling the display of different sections & for displaying API results
   let [currentSection, setCurrentSection] = useState("main");
@@ -22,24 +24,42 @@ function App() {
     setCurrentSection(section);
   }
 
-  // Function receiving geo-coordinates as argument to querying hotels API 
-  const getHotels = function(input) {
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
-        'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
-      }
+// Function to get airport IATA codes by searching with geo-coordinates:
+const getAirport = function(input) {
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com',
+      'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
     }
-
-    fetch(`https://booking-com.p.rapidapi.com/v1/hotels/search-by-coordinates?longitude=${input[0].lon}&latitude=${input[0].lat}&checkin_date=2022-09-30&locale=en-gb&filter_by_currency=AED&checkout_date=2022-10-01&room_number=1&units=metric&adults_number=2&order_by=popularity&include_adjacency=true&page_number=0&categories_filter_ids=class%3A%3A2%2Cclass%3A%3A4%2Cfree_cancellation%3A%3A1&children_ages=5%2C0&children_number=2`, options)
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data)
-        // console.log(data.result[0].hotel_name)
-        setHotelData(data.result);
-      })
   }
+
+    fetch(`https://aerodatabox.p.rapidapi.com/airports/search/location/${input[0].lat}/${input[0].lon}/km/100/5?withFlightInfoOnly=true`, options)
+	  .then(response => response.json())
+	  .then(data => {
+      setAirportData(data.items);
+      console.log(data.items);
+    })
+}
+
+  // Function receiving geo-coordinates as argument to querying hotels API 
+  // const getHotels = function(input) {
+  //   const options = {
+  //     method: 'GET',
+  //     headers: {
+  //       'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
+  //       'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
+  //     }
+  //   }
+
+  //   fetch(`https://booking-com.p.rapidapi.com/v1/hotels/search-by-coordinates?longitude=${input[0].lon}&latitude=${input[0].lat}&checkin_date=2022-09-30&locale=en-gb&filter_by_currency=AED&checkout_date=2022-10-01&room_number=1&units=metric&adults_number=2&order_by=popularity&include_adjacency=true&page_number=0&categories_filter_ids=class%3A%3A2%2Cclass%3A%3A4%2Cfree_cancellation%3A%3A1&children_ages=5%2C0&children_number=2`, options)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       // console.log(data)
+  //       // console.log(data.result[0].hotel_name)
+  //       setHotelData(data.result);
+  //     })
+  // }
   
   // Function to get API results for the city from the text input, on button click:
   const getCityInfo = function(input) {
@@ -49,7 +69,8 @@ function App() {
     .then((data) => {
       setCityData(data);
       // second, use geo-coordinates from data to search hotel API with getHotels function
-      getHotels(data);
+      // ! getHotels(data);
+      getAirport(data);
       // third, get weather for today and next 7 days from OpenWeather API with the coordinates
       fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`)
       .then((response) => response.json())
@@ -82,11 +103,12 @@ function App() {
   return (
     <div className="App">
       <h1>Sandbox API Test</h1>
+      <button className='section-btn' onClick={() => switchDisplay("main")}>Search</button>
+      <button className='section-btn' onClick={() => switchDisplay("weather")}>Weather</button>
+      <button className='section-btn' onClick={() => switchDisplay("flights")}>Flights</button>
+      <button className='section-btn' onClick={() => switchDisplay("hotels")}>Hotels</button>
       {currentSection === "main" &&
       <>
-        <button className='section-btn' onClick={() => switchDisplay("weather")}>Weather</button>
-        <button className='section-btn' onClick={() => switchDisplay("flights")}>Flights</button>
-        <button className='section-btn' onClick={() => switchDisplay("hotels")}>Hotels</button>
         <h3>Give us a city name and click this button to get the city geo-coordinates</h3>
         {/* Input updates userDestination state every time the user types something */}
         <input type="text" value={userDestination} onChange={handleInput}></input>
@@ -104,10 +126,6 @@ function App() {
 
     {currentSection === "weather" && 
      <>
-      <button className='section-btn' onClick={() => switchDisplay("main")}>New Search</button>
-      <button className='section-btn' onClick={() => switchDisplay("flights")}>Flights</button>
-      <button className='section-btn' onClick={() => switchDisplay("hotels")}>Hotels</button>
-
       {apiLoaded === true 
           ? <>
               <p><b>City:</b> {cityData[0].name} | <b>Lat:</b> {cityData[0].lat} | <b>Long:</b> {cityData[0].lon}</p>
@@ -133,18 +151,17 @@ function App() {
 
   {currentSection === "flights" && 
      <>
-      <button className='section-btn' onClick={() => switchDisplay("main")}>New Search</button>
-      <button className='section-btn' onClick={() => switchDisplay("weather")}>Weather</button>
-      <button className='section-btn' onClick={() => switchDisplay("hotels")}>Hotels</button>
+      {apiLoaded === true 
+        ? airportData.map((airport, index) => (
+        <p key={index}><b>Name:</b> {airport.name} | <b>IATA:</b> {airport.iata}</p>
+        ))
+        :<p>You did not search for anything yet.</p>
+      }
     </>
   }
 
-  {currentSection === "hotels" && 
+  {/* {currentSection === "hotels" && 
      <>
-      <button className='section-btn' onClick={() => switchDisplay("main")}>New Search</button>
-      <button className='section-btn' onClick={() => switchDisplay("weather")}>Weather</button>
-      <button className='section-btn' onClick={() => switchDisplay("flights")}>Flights</button>
-
       {apiLoaded === true
         ? hotelData.map((element, index) => {
           return (
@@ -166,7 +183,7 @@ function App() {
         : <p>You did not search for anything yet.</p>
       }
       </>
-  }
+  } */}
   </div>
   );
 }
