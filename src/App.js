@@ -2,47 +2,47 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  // states for user destination and all the API data:
+  // states for user origin and destination:
   let [userOrigin, setUserOrigin] = useState("");
   let [userDestination, setUserDestination] = useState("");
+
+  // states for all the API data:
   let [cityData, setCityData] = useState({});
   let [weatherData, setWeatherData] = useState({});
   let [hotelData, setHotelData] = useState({});
   let [airportData, setAirportData] = useState({});
+  let [flightsResult, setFlightsResult] = useState({});
  
   // states for handling the display of different sections & for displaying API results
-  let [currentSection, setCurrentSection] = useState("main");
   let [apiLoaded, setApiLoaded] = useState(false);
-
-  // Function updating the state variable userDestination with the text the user types
-  const handleInput = function(event) {
-    setUserDestination(event.currentTarget.value)
-  }
-
+  let [currentSection, setCurrentSection] = useState("main");
   // Function to switch which section is displayed on button click
   const switchDisplay = function(section) {
     setCurrentSection(section);
   }
 
-// Function to get airport IATA codes by searching with geo-coordinates:
-const getAirport = function(input) {
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com',
-      'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
-    }
+  // Function updating the state variables for origin & destination with the text the user types:
+  const handleInput = function(event) {
+    event.currentTarget.id === "from" 
+      ? setUserOrigin(event.currentTarget.value) 
+      : setUserDestination(event.currentTarget.value);
+    // if (event.currentTarget.id === "from") {
+    //   setUserOrigin(event.currentTarget.value);
+    // } else {
+    //   setUserDestination(event.currentTarget.value);
+    // }
   }
 
-    fetch(`https://aerodatabox.p.rapidapi.com/airports/search/location/${input[0].lat}/${input[0].lon}/km/100/5?withFlightInfoOnly=true`, options)
-	  .then(response => response.json())
-	  .then(data => {
-      setAirportData(data.items);
-      console.log(data.items);
+ // Function to get weather forecast from OpenWeather API with geo-coordinates:
+ const getWeather = function(destinationCoords) {
+  fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${destinationCoords[0].lat}&lon=${destinationCoords[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`)
+    .then((response) => response.json())
+    .then((dataWeather) => {
+        setWeatherData(dataWeather);
     })
 }
 
-  // Function receiving geo-coordinates as argument to querying hotels API 
+ // ! Function receiving geo-coordinates as argument to querying hotels API 
   // const getHotels = function(input) {
   //   const options = {
   //     method: 'GET',
@@ -60,41 +60,100 @@ const getAirport = function(input) {
   //       setHotelData(data.result);
   //     })
   // }
-  
-  // Function to get API results for the city from the text input, on button click:
-  const getCityInfo = function(input) {
+
+  // const getCoordinates = function(cityName) {
+  //   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${process.env.REACT_APP_WEATHERKEY}`)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     let coordinates = data;
+  //     console.log(coordinates);
+  //     return coordinates;
+  //   })
+  // }
+
+
+// Function to get airport IATA codes from Aerodatabox API by searching with geo-coordinates:
+const getAirport = function(originCoords, destinationCoords) {
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com',
+      'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
+    }
+  }
+
+  fetch(`https://aerodatabox.p.rapidapi.com/airports/search/location/${originCoords[0].lat}/${originCoords[0].lon}/km/100/5?withFlightInfoOnly=true`, options)
+  .then(response => response.json())
+  .then(coordsAirportOrigin => {
+    fetch(`https://aerodatabox.p.rapidapi.com/airports/search/location/${destinationCoords[0].lat}/${destinationCoords[0].lon}/km/100/5?withFlightInfoOnly=true`, options)
+    .then(response => response.json())
+    .then(coordsAirportDest => {
+      // setAirportData(data.items);
+      // console.log(data.items);
+      getFlight(coordsAirportOrigin.items, coordsAirportDest.items)
+    })
+  })
+}
+
+// Function see available flights from user origin to destination by Tequila Kiwi API:
+const getFlight = function(airportOrigin, airportDestination) {
+
+const options = {
+  method: 'GET',
+  headers: {
+    'apikey': 'HcxQ4ItEdLio4CstqGEOZY8AQsQKY9BM'
+  }
+}
+
+fetch(`https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&fly_to=${airportDestination[0].iata}&date_from=05%2F05%2F2022&date_to=15%2F05%2F2022&flight_type=oneway&one_for_city=0&one_per_date=0&adults=1&selected_cabins=C&mix_with_cabins=M&only_working_days=false&only_weekends=false&partner_market=us&max_stopovers=2&max_sector_stopovers=2&vehicle_type=aircraft&limit=50`, options)
+.then(response => response.json())
+.then(data => {
+  setFlightsResult(data.data[0])
+  console.log(data.data[0])
+  console.log(data.data[0].conversion.EUR)
+})
+}
+
+
+  // Main function to get all API data:
+  const getCityInfo = function(event) {
+    // prevent page from reloading after submitting form
+    event.preventDefault();
     // first get geo-coordinates from Geocoding API according to user input
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${process.env.REACT_APP_WEATHERKEY}`)
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${userDestination}&appid=${process.env.REACT_APP_WEATHERKEY}`)
     .then((response) => response.json())
-    .then((data) => {
-      setCityData(data);
+    .then((coordsDestination) => {
+      setCityData(coordsDestination);
+      setDestinationCoords(coordsDestination)
+      // first, get weather for today and next 7 days from OpenWeather API with the coordinates
+      getWeather(coordsDestination)
       // second, use geo-coordinates from data to search hotel API with getHotels function
-      // ! getHotels(data);
-      getAirport(data);
-      // third, get weather for today and next 7 days from OpenWeather API with the coordinates
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`)
+      // ! getHotels(coordsDestination);
+       // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
+      fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${userOrigin}&appid=${process.env.REACT_APP_WEATHERKEY}`)
       .then((response) => response.json())
-      .then((data2) => {
-          setWeatherData(data2);
-          // update state for API display 
-          setApiLoaded(true);
-      });
+      .then((coordsOrigin) => {
+        getAirport(coordsOrigin, coordsDestination);
+      })
+      // update state for API display 
+      setApiLoaded(true);
     });
     // emptying the input field by resetting the state variable after getting the API results
+    setUserOrigin("");
     setUserDestination("");
   }
 
   // Function to convert unix timestamps into human-readable dates
   function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    // var hour = a.getHours();
-    // var min = a.getMinutes();
-    // var sec = a.getSeconds();
-    var time = date + ' ' + month + ' ' + year;
+    let a = new Date(UNIX_timestamp * 1000);
+    let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    let year = a.getFullYear();
+    let month = months[a.getMonth()];
+    let date = a.getDate();
+    // let hour = a.getHours();
+    // let min = a.getMinutes();
+    // let sec = a.getSeconds();
+    let time = date + ' ' + month + ' ' + year;
     //[year] + ' ' + hour + ':' + min + ':' + sec 
     return time;
   }
@@ -110,10 +169,13 @@ const getAirport = function(input) {
       {currentSection === "main" &&
       <>
         <h3>Give us a city name and click this button to get the city geo-coordinates</h3>
-        {/* Input updates userDestination state every time the user types something */}
-        <input type="text" value={userDestination} onChange={handleInput}></input>
-        {/* Button click sends userDestination as argument to function getCityInfo for API call */}
-        <button onClick={() => getCityInfo(userDestination)}>Go!</button>
+        <form onSubmit={getCityInfo}>
+          <input type="text" value={userOrigin} onChange={handleInput} placeholder="From..." id="from"></input>
+          {/* Input updates userDestination state every time the user types something */}
+          <input type="text" value={userDestination} onChange={handleInput} placeholder="To..." id="to"></input>
+          {/* Button click sends userDestination as argument to function getCityInfo for API call */}
+          <button>Go!</button>
+        </form>
         {/* Displaying API results only if user searched at least once */}
         {apiLoaded == true &&
         <>
