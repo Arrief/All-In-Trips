@@ -4,7 +4,7 @@ import './App.css';
 import Button from './components/Button';
 import Hotels from './components/Hotels';
 import Weather from './components/Weather';
-import { GetWeather } from './components/GetWeather';
+import { getWeather, getHotels } from './components/ApiFunctions';
 import { MyContext } from './context/MyProvider';
 
 function App() {
@@ -15,37 +15,19 @@ function App() {
 
 
   // Function updating the state variables for origin & destination with the text the user types:
-  const handleInput = (event) => (
+  const handleInput = (event) => {
     event.currentTarget.id === "from" 
       ? context.setUserOrigin(event.currentTarget.value) 
       : context.setUserDestination(event.currentTarget.value)
-  )
+  }
 
-
- // Function to get weather forecast from OpenWeather API with geo-coordinates:
-//  const getWeather = (destinationCoords) => {
-//   fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${destinationCoords[0].lat}&lon=${destinationCoords[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`)
-//     .then((response) => response.json())
-//     .then((dataWeather) => (context.setWeatherData(dataWeather)))
-//   }
-
-
- // Function receiving geo-coordinates as argument to query hotels API 
-  const getHotels = (input, date) => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
-        'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
-      }
+  // Function updating the state variables for check-in & check-out with the date the user selects:
+  const handleDate = (event) => {
+    if (event.currentTarget.id === "checkin") {
+      context.setTravelDate(event.currentTarget.value);
+    } else {
+      context.setCheckoutDate(event.currentTarget.value)
     }
-
-    fetch(`https://booking-com.p.rapidapi.com/v1/hotels/search-by-coordinates?longitude=${input[0].lon}&latitude=${input[0].lat}&checkin_date=${date}&locale=en-gb&filter_by_currency=EUR&checkout_date=2022-06-01&room_number=1&units=metric&adults_number=2&order_by=price&include_adjacency=true&page_number=0&categories_filter_ids=class%3A%3A2%2Cclass%3A%3A4%2Cfree_cancellation%3A%3A1`, options)
-      .then(response => response.json())
-      .then(data => {context.setHotelData(data.result);
-        console.log(data.result)})
-        
-        // console.log(data.result[0].hotel_name)
   }
 
 
@@ -109,10 +91,11 @@ const getFlight = (airportOrigin, airportDestination) => {
     .then((response) => response.json())
     .then((coordsDestination) => {
       // first, get weather for today and next 7 days from OpenWeather API with the coordinates
-      GetWeather(coordsDestination)
+      getWeather(coordsDestination)
       .then((dataWeather) => (context.setWeatherData(dataWeather)));
       // second, use geo-coordinates from data to search hotel API with getHotels function
-      getHotels(coordsDestination, context.travelDate);
+      getHotels(coordsDestination, context.travelDate, context.checkoutDate)
+      .then((dataHotels) => (context.setHotelData(dataHotels.result)));
        // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
       fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${context.userOrigin}&appid=${process.env.REACT_APP_WEATHERKEY}`)
         .then((response) => response.json())
@@ -124,7 +107,6 @@ const getFlight = (airportOrigin, airportDestination) => {
     // context.setUserDestination("");
   }
 
-  const handleDate = (event) => (context.setTravelDate(event.currentTarget.value));
 
 
   return (
@@ -145,7 +127,8 @@ const getFlight = (airportOrigin, airportDestination) => {
           <input type="text" value={context.userOrigin} onChange={handleInput} placeholder="From..." id="from" required />
           {/* Input updates userDestination state every time the user types something */}
           <input type="text" value={context.userDestination} onChange={handleInput} placeholder="To..." id="to" required />
-          <input type="date" value={context.travelDate} onChange={handleDate} />
+          <input type="date" value={context.travelDate} onChange={handleDate} id="checkin" />
+          <input type="date" value={context.checkoutDate} onChange={handleDate} id="checkout" />
           {/* Button click sends userDestination as argument to function getCityInfo for API call */}
           <Button text="Go!" />
         </form>
