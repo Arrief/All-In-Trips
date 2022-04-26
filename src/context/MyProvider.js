@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 export const MyContext = React.createContext();
 
 const MyProvider = (props) => {
-  // states for user's current location and travel destination:
+  // states for user's current location, travel destination & date:
   let [userOrigin, setUserOrigin] = useState("");
   let [userDestination, setUserDestination] = useState("");
+  let [travelDate, setTravelDate] = useState("");
+  let [checkoutDate, setCheckoutDate] = useState("");
 
   // states for all the API data:
   let [weatherData, setWeatherData] = useState({});
@@ -22,6 +24,10 @@ const MyProvider = (props) => {
       setUserOrigin: setUserOrigin,
       userDestination: userDestination, 
       setUserDestination: setUserDestination,
+      travelDate: travelDate,
+      setTravelDate: setTravelDate,
+      checkoutDate: checkoutDate,
+      setCheckoutDate: setCheckoutDate,
       weatherData: weatherData, 
       setWeatherData: setWeatherData,
       hotelData: hotelData, 
