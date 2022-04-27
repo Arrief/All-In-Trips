@@ -4,7 +4,7 @@ import './App.css';
 import Button from './components/Button';
 import Hotels from './components/Hotels';
 import Weather from './components/Weather';
-import { getWeather, getHotels } from './components/ApiFunctions';
+import { getCoordinates, getWeather, getHotels, getAirport, getFlight } from './functions/ApiFunctions';
 import { MyContext } from './context/MyProvider';
 
 function App() {
@@ -29,66 +29,14 @@ function App() {
       context.setCheckoutDate(event.currentTarget.value)
     }
   }
-
-
-// Function to get airport IATA codes from Aerodatabox API by searching with geo-coordinates:
-const getAirport = (originCoords, destinationCoords) => {
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com',
-      'X-RapidAPI-Key': process.env.REACT_APP_HOTELKEY
-    }
-  }
-
-  fetch(`https://aerodatabox.p.rapidapi.com/airports/search/location/${originCoords[0].lat}/${originCoords[0].lon}/km/100/5?withFlightInfoOnly=true`, options)
-    .then(response => response.json())
-    .then(coordsAirportOrigin => {
-      fetch(`https://aerodatabox.p.rapidapi.com/airports/search/location/${destinationCoords[0].lat}/${destinationCoords[0].lon}/km/100/5?withFlightInfoOnly=true`, options)
-        .then(response => response.json())
-        .then(coordsAirportDest => (getFlight(coordsAirportOrigin.items, coordsAirportDest.items)))
-        // console.log(data.items);
-    })
-}
-
-// Function to see available flights from user origin to destination by Tequila Kiwi API:
-const getFlight = (airportOrigin, airportDestination) => {
-  const options = {
-    method: 'GET',
-    headers: {
-      'apikey': process.env.REACT_APP_FLIGHTSKEY
-    }
-  }
-
-  fetch(`https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&fly_to=${airportDestination[0].iata}&date_from=05%2F05%2F2022&date_to=15%2F05%2F2022&flight_type=oneway&one_for_city=0&one_per_date=0&adults=1&selected_cabins=C&mix_with_cabins=M&only_working_days=false&only_weekends=false&partner_market=us&curr=EUR&max_stopovers=2&max_sector_stopovers=2&vehicle_type=aircraft&limit=50`, options)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data.data[0])
-    // console.log(data.data[0].conversion.EUR)
-    context.setFlightsResult(data.data)
-    // update state for API display, this API will be the last one to reply
-    context.setApiLoaded(true);
-    })
-  }
-
-  // ? Function for getting coordinates with geocoding API, now happening in main getCityInfo fn
-  // const getCoordinates = function(cityName) {
-  //   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${process.env.REACT_APP_WEATHERKEY}`)
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     let coordinates = data;
-  //     console.log(coordinates);
-  //     return coordinates;
-  //   })
-  // }
+  
 
   // Main function to get all API data:
   const getCityInfo = (event) => {
     // prevent page from reloading after submitting form
     event.preventDefault();
     // first get geo-coordinates from Geocoding API according to user input
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${context.userDestination}&appid=${process.env.REACT_APP_WEATHERKEY}`)
-    .then((response) => response.json())
+    getCoordinates(context.userDestination)
     .then((coordsDestination) => {
       // first, get weather for today and next 7 days from OpenWeather API with the coordinates
       getWeather(coordsDestination)
@@ -97,9 +45,22 @@ const getFlight = (airportOrigin, airportDestination) => {
       getHotels(coordsDestination, context.travelDate, context.checkoutDate)
       .then((dataHotels) => (context.setHotelData(dataHotels.result)));
        // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
-      fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${context.userOrigin}&appid=${process.env.REACT_APP_WEATHERKEY}`)
-        .then((response) => response.json())
-        .then((coordsOrigin) => (getAirport(coordsOrigin, coordsDestination)))
+      getCoordinates(context.userOrigin)
+        .then((coordsOrigin) => {
+          getAirport(coordsOrigin)
+          .then(originIata => {
+            getAirport(coordsDestination)
+            .then(destIata => getFlight(originIata.items, destIata.items)
+            .then(dataFlights => {
+              console.log(dataFlights.data[0])
+              // console.log(dataFlights.data[0].conversion.EUR)
+              context.setFlightsResult(dataFlights.data)
+              // update state for API display, this API will be the last one to reply
+              context.setApiLoaded(true);
+              })
+            )
+          })
+        }) 
       });
       // ! does not show when we want to dispay userOrigin/userDestination if uncommented!
     // emptying the input field by resetting the state variable after getting the API results
@@ -107,6 +68,17 @@ const getFlight = (airportOrigin, airportDestination) => {
     // context.setUserDestination("");
   }
 
+  function timeConverter(UNIX_timestamp) {
+    let a = new Date(UNIX_timestamp * 1000);
+
+    let date = a.getDate();
+    let hour = a.getHours();
+    let min = a.getMinutes();
+    // let sec = a.getSeconds();
+    let time = date + ' ' + hour + ':' + min;
+    //[year] + ' ' + hour + ':' + min + ':' + sec 
+    return time;
+  }
 
 
   return (
@@ -151,6 +123,8 @@ const getFlight = (airportOrigin, airportDestination) => {
             <div className="card" key={index}>
               <p><b>From:</b> {element.cityFrom} | <b>To:</b> {element.cityTo}</p>
               <p><b>Line:</b> {element.airlines[0]} <b>Price:</b> {element.price} Euro</p>
+              <p><b>Duration:</b> {timeConverter(element.duration)}</p>
+              {/* element.distance & element.duration */}
               <p><b>Price per bag:</b> {element.bags_price["1"]}</p>
             </div>
             ))
