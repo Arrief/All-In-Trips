@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,7 +35,7 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 
 .section-btn {
@@ -54,3 +54,95 @@
   margin-left: 30%;
   margin-right: 30%;
 }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+.home,
+.flights,
+.weather,
+.hotel {
+  display: flex;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+.flights {
+  /* background-image: src='./public/images/img-2.jpg'; */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
+}
+
+.flights-text {
+  /* background-image: url('/images/img-1.jpg'); */
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: black;
+  text-align: center;
+  opacity: 0.6;
+  background-color: #ffffff;
+  filter: alpha(opacity=60);
+}
+
+.weather {
+  /* background-image: url('/images/img-1.jpg'); */
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
+}
+
+.image-hotel {
+  size-adjust: 30px;
+}
+
+.weather-text {
+  /* background-image: url('/images/img-1.jpg'); */
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: black;
+  text-align: center;
+  opacity: 0.6;
+  background-color: #ffffff;
+  filter: alpha(opacity=60);
+}
+
+.hotel {
+  /* background-image: url('/images/img-1.jpg'); */
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
+}
+
+.hotel-text {
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: black;
+  text-align: center;
+  opacity: 0.6;
+  background-color: #ffffff;
+  filter: alpha(opacity=100);
+}
+
+/* .btn--outline {
+  background-color: transparent;
+  color: #fff;
+  padding: 8px 20px;
+  border: 1px solid var(--primary);
+  transition: all 0.3s ease-out;
+} */

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import { MyContext } from '../context/MyProvider';
+import '../App.css'
 
 const Hotels = () => {
   const context = useContext(MyContext);
@@ -10,6 +11,11 @@ const Hotels = () => {
       {context.apiLoaded === true &&
           context.hotelData.map((element, index) => {
             return (
+              <div className='hotel-container'>
+              <video src='/videos/video-hotel.mp4' autoPlay loop muted />
+              <div className='hotel-text'>
+                <br />
+                <h1>Hotels</h1>
               <div className="card" key={index}>
                 <p><b>Hotel name:</b> <i>{element.hotel_name} </i>
                 </p>
@@ -24,6 +30,8 @@ const Hotels = () => {
                 <b>Link to book hotel:</b> <a href={element.url} target="_blank">Check more details at Booking.com</a></p>
                 <p>
                 <b>Best price:</b> <i>{element.price_breakdown.gross_price}, {element.price_breakdown.currency}</i></p>
+              </div>
+              </div>
               </div>
             )
           })
