@@ -1,3 +1,4 @@
+// Function to get the geo-coordinates for a city from OpenWeather Geocoding API
 export const getCoordinates = function(cityName) {
   const url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${process.env.REACT_APP_WEATHERKEY}`;
 
@@ -8,7 +9,7 @@ export const getCoordinates = function(cityName) {
 }
 
 
-// Function to get weather forecast from OpenWeather API with geo-coordinates:
+// Function to get weather forecast from OpenWeather OneCall API with geo-coordinates:
 export const getWeather = (destinationCoords) => {
 
   const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${destinationCoords[0].lat}&lon=${destinationCoords[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`;

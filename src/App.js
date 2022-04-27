@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import './App.css';
 // import MyProvider from './context/MyProvider';
+import moment from 'moment';
 import Button from './components/Button';
 import Hotels from './components/Hotels';
 import Weather from './components/Weather';
@@ -29,7 +30,7 @@ function App() {
       context.setCheckoutDate(event.currentTarget.value)
     }
   }
-  
+
 
   // Main function to get all API data:
   const getCityInfo = (event) => {
@@ -68,17 +69,17 @@ function App() {
     // context.setUserDestination("");
   }
 
-  function timeConverter(UNIX_timestamp) {
-    let a = new Date(UNIX_timestamp * 1000);
+// let isoDate = "2021-09-19T05:30:00.000Z";
 
-    let date = a.getDate();
-    let hour = a.getHours();
-    let min = a.getMinutes();
-    // let sec = a.getSeconds();
-    let time = date + ' ' + hour + ':' + min;
-    //[year] + ' ' + hour + ':' + min + ':' + sec 
-    return time;
-  }
+function localTime(isoDate) {
+// moment().format();
+let newDate =  moment.utc(isoDate).format('DD MM YY, h:mm a');
+// console.log('converted date', newDate); // 09/23/21
+return newDate;
+} 
+ 
+// let newDate2 = moment.utc(isoDate).format("MMM Do, YYYY");
+// console.log('converted date', newDate2); // Sept 24, 2021
 
 
   return (
@@ -123,7 +124,8 @@ function App() {
             <div className="card" key={index}>
               <p><b>From:</b> {element.cityFrom} | <b>To:</b> {element.cityTo}</p>
               <p><b>Line:</b> {element.airlines[0]} <b>Price:</b> {element.price} Euro</p>
-              <p><b>Duration:</b> {timeConverter(element.duration)}</p>
+              {/* <p><b>Duration:</b> {timeConverter(element.duration)}</p> */}
+              <p><b>Local Departure:</b> {localTime(element.local_departure)} --- <b>Local Arrival:</b> {localTime(element.local_arrival)}</p>
               {/* element.distance & element.duration */}
               <p><b>Price per bag:</b> {element.bags_price["1"]}</p>
             </div>
