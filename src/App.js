@@ -6,6 +6,9 @@ import Hotels from './components/Hotels';
 import Weather from './components/Weather';
 import { getWeather, getHotels } from './components/ApiFunctions';
 import { MyContext } from './context/MyProvider';
+import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  
 
 function App() {
   const context = useContext(MyContext);
@@ -110,19 +113,24 @@ const getFlight = (airportOrigin, airportDestination) => {
 
 
   return (
+
+    
+    
     <div className="App">
-      <h1>Sandbox API Test</h1>
+      {/* <h1>Sandbox API Test</h1> */}
       <Button style='section-btn' action={() => switchDisplay("main")} text="Search" />
       {context.apiLoaded === true && 
       <>
+    
         <Button style='section-btn' action={() => switchDisplay("weather")} text="Weather" />    
         <Button style='section-btn' action={() => switchDisplay("flights")} text="Flights" />
         <Button style='section-btn' action={() => switchDisplay("hotels")} text="Hotels" />
       </>
       }
+       
       {context.currentSection === "main" &&
       <>
-        <h3>Give us a city name and click this button to get the city geo-coordinates</h3>
+        <h3>Give us a city name and click <i>Go!</i> to get the city geo-coordinates</h3>
         <form onSubmit={getCityInfo}>
           <input type="text" value={context.userOrigin} onChange={handleInput} placeholder="From..." id="from" required />
           {/* Input updates userDestination state every time the user types something */}
@@ -131,16 +139,37 @@ const getFlight = (airportOrigin, airportDestination) => {
           <input type="date" value={context.checkoutDate} onChange={handleDate} id="checkout" />
           {/* Button click sends userDestination as argument to function getCityInfo for API call */}
           <Button text="Go!" />
+          <br />
+          <br />
+          
         </form>
         {/* Displaying API results only if user searched at least once */}
         {context.apiLoaded === true &&
+        
         <>
+        <br />
           <h3>You searched for a trip from {context.userOrigin} to {context.userDestination}</h3>
           <p>Please check the according sections to see the weather forecast, suitable flights and the best hotels for your travel destination</p>
+        <br />
         </>
+        
         }
+
+        
+         <LandingPage />
       </>
       }
+
+      {/* <>
+      <Router>
+        <Navbar />
+        <Routes>
+        
+          <Route path='/weather' element={<Weather/>} />
+          <Route path='/hotels' element={<Hotels/>} />
+        </Routes>
+      </Router>
+      </> */}
 
       {context.currentSection === "weather" && <Weather />}
 
