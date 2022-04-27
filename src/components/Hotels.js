@@ -6,11 +6,10 @@ import '../App.css'
 const Hotels = () => {
   const context = useContext(MyContext);
 
+  // ! hotel video should not be in map, repeated for every element!
   return(
-    <>
-      {context.apiLoaded === true &&
-          context.hotelData.map((element, index) => {
-            return (
+    context.hotelData.map((element, index) => {
+      return (
               <div className='hotel-container'>
               <video src='/videos/video-hotel.mp4' autoPlay loop muted />
               <div className='hotel-text'>
@@ -20,7 +19,7 @@ const Hotels = () => {
                 <p><b>Hotel name:</b> <i>{element.hotel_name} </i>
                 </p>
                 <img src={element.max_photo_url} alt={element.hotel_name} />
-                <p><b>Hotel address:</b> <i>{element.address}</i>
+                <p><b>Hotel address:</b> <i>{element.address}, {element.zip} {element.city}</i>
                 </p>
                 <p><b>Check-In from:</b> {element.checkin.from} h</p>
                 <p><b>Check-Out from:</b> {element.checkout.until} h</p>
@@ -35,8 +34,6 @@ const Hotels = () => {
               </div>
             )
           })
-      }
-    </>
   )
 };
 

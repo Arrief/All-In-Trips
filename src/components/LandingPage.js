@@ -3,7 +3,7 @@ import '../App.css';
 // import { Button } from './Button';
 import './LandingPage.css';
 
-function LandingPage() {
+const LandingPage = () => {
   return (
     <div className='landing-container'>
       <video src='/videos/video-landing.mp4' autoPlay loop muted />
@@ -33,4 +33,3 @@ function LandingPage() {
 }
 
 export default LandingPage;
-

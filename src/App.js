@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
 import './App.css';
-import moment from 'moment';
 // import MyProvider from './context/MyProvider';
-import moment from 'moment';
 import Button from './components/Button';
 import Hotels from './components/Hotels';
 import Weather from './components/Weather';
+import Flights from './components/Flights';
+import { getCoordinates, getWeather, getHotels, getAirport, getFlight } from './functions/ApiFunctions';
 import { MyContext } from './context/MyProvider';
+import LandingPage from './components/LandingPage';
+// ! landing page has to be placed somewhere into return
 
 function App() {
   const context = useContext(MyContext);
@@ -43,14 +45,16 @@ function App() {
       .then((dataWeather) => (context.setWeatherData(dataWeather)));
       // second, use geo-coordinates from data to search hotel API with getHotels function
       getHotels(coordsDestination, context.travelDate, context.checkoutDate)
-      .then((dataHotels) => (context.setHotelData(dataHotels.result)));
+      .then((dataHotels) => {
+        context.setHotelData(dataHotels.result)
+      console.log(dataHotels)});
        // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
       getCoordinates(context.userOrigin)
         .then((coordsOrigin) => {
           getAirport(coordsOrigin)
           .then(originIata => {
             getAirport(coordsDestination)
-            .then(destIata => getFlight(originIata.items, destIata.items)
+            .then(destIata => getFlight(originIata.items, destIata.items, context.travelDate)
             .then(dataFlights => {
               console.log(dataFlights.data[0])
               // console.log(dataFlights.data[0].conversion.EUR)
@@ -69,13 +73,12 @@ function App() {
   }
 
 // let isoDate = "2021-09-19T05:30:00.000Z";
-
-function localTime(isoDate) {
+// function localTime(isoDate) {
 // moment().format();
-let newDate =  moment.utc(isoDate).format('DD MM YY, h:mm a');
+// let newDate =  moment.utc(isoDate).format('DD MM YY, h:mm a');
 // console.log('converted date', newDate); // 09/23/21
-return newDate;
-} 
+// return newDate;
+// } 
 // let newDate2 = moment.utc(isoDate).format("MMM Do, YYYY");
 // console.log('converted date', newDate2); // Sept 24, 2021
   
@@ -93,9 +96,12 @@ return newDate;
         }
         {context.currentSection === "main" &&
         <>
+        // ? Component for form or keep it here? We only need it here, nowhere else
           <h3>Give us a city name and click this button to get the city geo-coordinates</h3>
           <form onSubmit={getCityInfo}>
-            <input type="text" value={context.userOrigin} onChange={handleInput} placeholder="From..." id="from" required />
+            <input type="text" value={context.userOrigin} onChange={handleInput}
+             placeholder="From..." id="from" required />
+             {/* (event) => handleInput(event, ) */}
             {/* Input updates userDestination state every time the user types something */}
             <input type="text" value={context.userDestination} onChange={handleInput} placeholder="To..." id="to" required />
             <input type="date" value={context.travelDate} onChange={handleDate} id="checkin" />
@@ -112,27 +118,13 @@ return newDate;
           }
         </>
         }
-  
-        {context.currentSection === "weather" && <Weather />}
-  
-        {context.currentSection === "flights" && 
-          <>
-            {context.apiLoaded === true &&
-              context.flightsResult.map((element, index) => (
-              <div className="card" key={index}>
-                <p><b>From:</b> {element.cityFrom} | <b>To:</b> {element.cityTo}</p>
-                <p><b>Line:</b> {element.airlines[0]} <b>Price:</b> {element.price} Euro</p>
-                {/* <p><b>Duration:</b> {timeConverter(element.duration)}</p> */}
-                <p><b>Local Departure:</b> {localTime(element.local_departure)} --- <b>Local Arrival:</b> {localTime(element.local_arrival)}</p>
-                {/* element.distance & element.duration */}
-                <p><b>Price per bag:</b> {element.bags_price["1"]}</p>
-              </div>
-              ))
-            }
+        {context.apiLoaded === true &&
+          <> 
+            {context.currentSection === "weather" && <Weather />}
+            {context.currentSection === "flights" && <Flights />}
+            {context.currentSection === "hotels" && <Hotels />}
           </>
         }
-  
-        {context.currentSection === "hotels" && <Hotels />}
       </div>
     );
 }
