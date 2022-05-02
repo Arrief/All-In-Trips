@@ -37,17 +37,19 @@ function App() {
   const getCityInfo = (event) => {
     // prevent page from reloading after submitting form
     event.preventDefault();
+    context.setFormFilled(true);
     // first get geo-coordinates from Geocoding API according to user input
     getCoordinates(context.userDestination)
     .then((coordsDestination) => {
       // first, get weather for today and next 7 days from OpenWeather API with the coordinates
       getWeather(coordsDestination)
-      .then((dataWeather) => (context.setWeatherData(dataWeather)));
+      .then((dataWeather) => (context.setWeatherData(dataWeather)))
       // second, use geo-coordinates from data to search hotel API with getHotels function
       getHotels(coordsDestination, context.travelDate, context.checkoutDate)
       .then((dataHotels) => {
-        context.setHotelData(dataHotels.result)
-      console.log(dataHotels)});
+        console.log(dataHotels.result);
+        context.setHotelData(dataHotels.result)})
+      // console.log(dataHotels)});
        // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
       getCoordinates(context.userOrigin)
         .then((coordsOrigin) => {
@@ -56,7 +58,7 @@ function App() {
             getAirport(coordsDestination)
             .then(destIata => getFlight(originIata.items, destIata.items, context.travelDate)
             .then(dataFlights => {
-              console.log(dataFlights.data[0])
+              console.log(dataFlights.data)
               // console.log(dataFlights.data[0].conversion.EUR)
               context.setFlightsResult(dataFlights.data)
               // update state for API display, this API will be the last one to reply
@@ -66,21 +68,11 @@ function App() {
           })
         }) 
       });
-      // ! does not show when we want to dispay userOrigin/userDestination if uncommented!
+     // ! does not show when we want to display userOrigin/userDestination if uncommented!
     // emptying the input field by resetting the state variable after getting the API results
     // context.setUserOrigin("");
     // context.setUserDestination("");
   }
-
-// let isoDate = "2021-09-19T05:30:00.000Z";
-// function localTime(isoDate) {
-// moment().format();
-// let newDate =  moment.utc(isoDate).format('DD MM YY, h:mm a');
-// console.log('converted date', newDate); // 09/23/21
-// return newDate;
-// } 
-// let newDate2 = moment.utc(isoDate).format("MMM Do, YYYY");
-// console.log('converted date', newDate2); // Sept 24, 2021
   
   
   return (
@@ -96,7 +88,6 @@ function App() {
         }
         {context.currentSection === "main" &&
         <>
-        // ? Component for form or keep it here? We only need it here, nowhere else
           <h3>Give us a city name and click this button to get the city geo-coordinates</h3>
           <form onSubmit={getCityInfo}>
             <input type="text" value={context.userOrigin} onChange={handleInput}
@@ -110,11 +101,18 @@ function App() {
             <Button text="Go!" />
           </form>
           {/* Displaying API results only if user searched at least once */}
-          {context.apiLoaded === true &&
-          <>
+          {context.apiLoaded === true
+          ?
+          (<>
             <h3>You searched for a trip from {context.userOrigin} to {context.userDestination}</h3>
             <p>Please check the according sections to see the weather forecast, suitable flights and the best hotels for your travel destination</p>
-          </>
+          </>)
+          : (context.formFilled && (
+            <img
+              src="https://powerusers.microsoft.com/t5/image/serverpage/image-id/118082i204C32E01666789C?v=v2"
+              alt="loading spinner"
+            />
+          ))
           }
         </>
         }
@@ -127,6 +125,6 @@ function App() {
         }
       </div>
     );
-}
+  }
 
 export default App;

@@ -17,6 +17,8 @@ const MyProvider = (props) => {
   // states for handling the display of different sections & for displaying API results
   let [apiLoaded, setApiLoaded] = useState(false);
   let [currentSection, setCurrentSection] = useState("main");
+  let [formFilled, setFormFilled] = useState(false);
+  let [optionHotels, setOptionHotels] = useState("best price");
 
   return (
     <MyContext.Provider value={{
@@ -38,6 +40,10 @@ const MyProvider = (props) => {
       setApiLoaded: setApiLoaded,
       currentSection: currentSection, 
       setCurrentSection: setCurrentSection,
+      formFilled: formFilled,
+      setFormFilled: setFormFilled,
+      optionHotels: optionHotels,
+      setOptionHotels: setOptionHotels,
     }} >
       {props.children}
     </MyContext.Provider>
