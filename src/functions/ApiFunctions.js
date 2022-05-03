@@ -5,7 +5,7 @@ export const getCoordinates = function(cityName) {
   return(
     fetch(url)
     .then((response) => response.json())
-    );
+    )
 }
 
 
@@ -17,7 +17,7 @@ export const getWeather = (destinationCoords) => {
   return(
   fetch(url)
   .then((response) => response.json())
-  );
+  )
 }
 
 
@@ -37,7 +37,7 @@ export const getHotels = (coords, checkin, checkout) => {
   return(
   fetch(url, options)
     .then((response) => response.json())
-  );
+  )
 }
 
 
@@ -57,16 +57,14 @@ export const getAirport = (coordinates) => {
   return(
   fetch(url, options)
     .then(response => response.json())
-  );
+  )
 }
 
 
 // Function to see available flights from user origin to destination by Tequila Kiwi API:
 export const getFlight = (airportOrigin, airportDestination, dayOfFlight) => {
 
-  // const url = `https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&fly_to=${airportDestination[0].iata}&date_from=${dayOfFlight}&date_to=${dayOfFlight}&flight_type=oneway&one_for_city=0&one_per_date=0&adults=1&selected_cabins=C&mix_with_cabins=M&only_working_days=false&only_weekends=false&partner_market=us&curr=EUR&max_stopovers=2&max_sector_stopovers=2&vehicle_type=aircraft&sort=price&limit=50`
-
-  const url = `https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&fly_to=${airportDestination[0].iata}&date_from=${dayOfFlight}&date_to=${dayOfFlight}&one_for_city=0&one_per_date=0&adults=1&children=0&selected_cabins=C&mix_with_cabins=M&only_working_days=false&only_weekends=false&partner_market=us&curr=EUR&max_stopovers=2&max_sector_stopovers=2&vehicle_type=aircraft&sort=price&limit=50`;
+  const url = `https://tequila-api.kiwi.com/v2/search?fly_from=${airportOrigin[0].iata}&fly_to=${airportDestination[0].iata}&date_from=${dayOfFlight}&date_to=${dayOfFlight}&flight_type=oneway&one_for_city=0&one_per_date=0&adults=1&selected_cabins=C&mix_with_cabins=M&only_working_days=false&only_weekends=false&partner_market=us&curr=EUR&max_stopovers=2&max_sector_stopovers=2&vehicle_type=aircraft&sort=price&limit=50`
 
   const options = {
     method: 'GET',
@@ -78,5 +76,5 @@ export const getFlight = (airportOrigin, airportDestination, dayOfFlight) => {
   return(
   fetch(url, options)
   .then(response => response.json())
-  );
+  )
 }
