@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { localTime, secondsToHours } from '../../functions/TimestampFunctions';
 import Dropdown from '../Dropdown';
 import { MyContext } from '../../context/MyProvider';
-import '../App.css'
+import '../../App.css'
 
 const Flights = () => {
   const context = useContext(MyContext); 
@@ -12,7 +12,7 @@ const Flights = () => {
       <div className="card" key={index}>
         <p><b>From:</b> {element.cityFrom} | <b>To:</b> {element.cityTo}</p>
         <p><b>Airline:</b> {element.airlines[0]} <b>Price:</b> {element.price} Euro</p>
-        <p><b>Nr of stopovers:</b> {element.route.length === 1 ? "direct flight" : element.route.length}</p>
+        <p><b>Nr of stopovers:</b> {element.route.length === 1 ? "direct flight" : element.route.length - 1}</p>
         <p><b>Local Departure:</b> {localTime(element.local_departure)} --- <b>Local Arrival:</b> {localTime(element.local_arrival)} </p>
         <p><b>Flight duration:</b> {secondsToHours(element.duration.total)} hours</p>
         <p><b>Price per bag:</b> {Math.round((element.bags_price["1"] * 100) / 100)} EUR</p>

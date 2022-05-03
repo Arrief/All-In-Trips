@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import '../App.css';
+import '../../App.css';
 import { MyContext } from '../../context/MyProvider';
 import { timeConverter } from '../../functions/TimestampFunctions';
 
