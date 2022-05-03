@@ -7,7 +7,7 @@ const Hotels = () => {
   const context = useContext(MyContext);
 
   // ! hotel video should not be in map, repeated for every element! Also need key!
-  const mapOutput = (element, index) => {
+  const mapHotelsOutput = (element, index) => {
     return (
             <div className='hotel-container'>
             {/* <video src='/videos/video-hotel.mp4' autoPlay loop muted /> */}
@@ -47,19 +47,19 @@ const Hotels = () => {
       <hr />
       {context.optionHotels === "best price" &&
         context.hotelData.sort((a, b) => a.price_breakdown.gross_price - b.price_breakdown.gross_price)
-        .map(mapOutput)
+        .map(mapHotelsOutput)
       }
       {context.optionHotels === "best ratings" &&
         context.hotelData.sort((a, b) => b.review_score - a.review_score)
-        .map(mapOutput)
+        .map(mapHotelsOutput)
       }
       {context.optionHotels === "most ratings" &&
         context.hotelData.sort((a, b) => b.review_nr - a.review_nr)
-        .map(mapOutput)
+        .map(mapHotelsOutput)
       }
       {context.optionHotels === "closest to city center" &&
         context.hotelData.sort((a, b) => a.distance_to_cc - b.distance_to_cc)
-        .map(mapOutput)
+        .map(mapHotelsOutput)
       }
     </>
   )
