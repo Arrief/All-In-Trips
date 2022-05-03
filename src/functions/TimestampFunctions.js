@@ -24,19 +24,7 @@ export const localTime = (isoDate) => {
   return newDate;
 };
 
-// export const secondsToHours = (seconds) => {
-//   let inHours = moment.utc(seconds * 1000).format('HH:mm');
-//   return inHours;
-// };
-
-export const secondsToHours = (secs) => {
-  let sec_num = parseInt(secs, 10);
-  let hours   = Math.floor(sec_num / 3600);
-  let minutes = Math.floor(sec_num / 60) % 60;
-  // let seconds = sec_num % 60;
-
-  return [hours,minutes]
-      .map(v => v < 10 ? "0" + v : v)
-      .filter((v,i) => v !== "00" || i > 0)
-      .join(":");
-}
+export const secondsToHours = (seconds) => {
+  let inHours = moment.utc(seconds * 1000).format('HH:mm');
+  return inHours;
+};

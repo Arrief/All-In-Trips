@@ -19,7 +19,6 @@ const MyProvider = (props) => {
   let [currentSection, setCurrentSection] = useState("main");
   let [formFilled, setFormFilled] = useState(false);
   let [optionHotels, setOptionHotels] = useState("best price");
-  let [optionFlights, setOptionFlights] = useState("best price");
 
   return (
     <MyContext.Provider value={{
@@ -45,8 +44,6 @@ const MyProvider = (props) => {
       setFormFilled: setFormFilled,
       optionHotels: optionHotels,
       setOptionHotels: setOptionHotels,
-      optionFlights: optionFlights,
-      setOptionFlights: setOptionFlights,
     }} >
       {props.children}
     </MyContext.Provider>
