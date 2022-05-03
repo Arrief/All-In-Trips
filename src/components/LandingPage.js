@@ -1,33 +1,14 @@
 import React from 'react';
 import '../App.css';
-// import { Button } from './Button';
 import './LandingPage.css';
 
 const LandingPage = () => {
   return (
     <div className='landing-container'>
-      <video src='/videos/video-landing.mp4' autoPlay loop muted />
+      {/* <video src='/videos/video-landing.mp4' autoPlay loop muted /> */}
+      <img className="img-landing" src='/images/img-landing.png' />
       <h1>TRAVEL MODE</h1>
-      <p>All you need for a perfect trip</p>
-
-      
-      {/* <div className='landing-btns'>
-        <Button
-          className='btns'
-          buttonStyle='btn--outline'
-          buttonSize='btn--large'
-        >
-          GET STARTED */}
-        {/* </Button> */}
-        {/* <Button
-          className='btns'
-          buttonStyle='btn--primary'
-          buttonSize='btn--large'
-          onClick={console.log('hey')}
-        >
-          WATCH TRAILER <i className='far fa-play-circle' />
-        </Button> */}
-      {/* </div> */}
+      <p>fill in below to check flights, hotels and weather</p>
     </div>
   );
 }
