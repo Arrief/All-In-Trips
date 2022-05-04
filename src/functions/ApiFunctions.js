@@ -1,21 +1,22 @@
 // Template for an API call with fetch
 const fetchApiCall = (url, options) =>
-  fetch(url, options).then((response) => response.json());
-
-
-// Function to get the geo-coordinates for a city from OpenWeather Geocoding API
-export const getCoordinates = function(cityName) {
-  const url = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${process.env.REACT_APP_WEATHERKEY}`;
-
-  return(
-    fetch(url)
-    .then((response) => {
+  fetch(url, options)
+  .then((response) => {
     if (response.status !== 200) {
       return console.log("An error happened!");
     } else {
-     return response.json()}
-    })
-  );
+     return response.json()
+    }
+  });
+
+
+// Function to get the geo-coordinates for a city from OpenWeather Geocoding API
+export const getCoordinates = function(origin, destination) {
+  const urlOrigin = `http://api.openweathermap.org/geo/1.0/direct?q=${origin}&appid=${process.env.REACT_APP_WEATHERKEY}`;
+
+  const urlDestination = `http://api.openweathermap.org/geo/1.0/direct?q=${destination}&appid=${process.env.REACT_APP_WEATHERKEY}`;
+
+  return Promise.all([fetchApiCall(urlOrigin), fetchApiCall(urlDestination)]);
 }
 
 
@@ -24,15 +25,7 @@ export const getWeather = (destinationCoords) => {
 
   const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${destinationCoords[0].lat}&lon=${destinationCoords[0].lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_WEATHERKEY}&units=metric`;
 
-  return(
-    fetch(url)
-    .then((response) => {
-    if (response.status !== 200) {
-      return console.log("An error happened!");
-    } else {
-     return response.json()}
-    })
-  );
+  return(fetchApiCall(url));
 }
 
 
@@ -49,22 +42,16 @@ export const getHotels = (coords, checkin, checkout) => {
     }
   }
 
-  return(
-    fetch(url, options)
-    .then((response) => {
-    if (response.status !== 200) {
-      return console.log("An error happened!");
-    } else {
-     return response.json()}
-    })
-  );
+  return(fetchApiCall(url, options));
 }
 
 
 // Function to get airport IATA codes from Aerodatabox API by searching with geo-coordinates:
-export const getAirport = (coordinates) => {
+export const getAirports = (origin, destination) => {
   
-  const url = `https://aerodatabox.p.rapidapi.com/airports/search/location/${coordinates[0].lat}/${coordinates[0].lon}/km/100/5?withFlightInfoOnly=true`;
+  const urlOrigin = `https://aerodatabox.p.rapidapi.com/airports/search/location/${origin[0].lat}/${origin[0].lon}/km/100/5?withFlightInfoOnly=true`;
+
+  const urlDestination = `https://aerodatabox.p.rapidapi.com/airports/search/location/${destination[0].lat}/${destination[0].lon}/km/100/5?withFlightInfoOnly=true`;
 
   const options = {
     method: 'GET',
@@ -74,15 +61,7 @@ export const getAirport = (coordinates) => {
     }
   }
 
-  return(
-    fetch(url, options)
-    .then((response) => {
-    if (response.status !== 200) {
-      return console.log("An error happened!");
-    } else {
-     return response.json()}
-    })
-  );
+  return Promise.all([fetchApiCall(urlOrigin), fetchApiCall(urlDestination)]);
 }
 
 
@@ -93,7 +72,7 @@ export const getFlight = (airportOrigin, airportDestination, dayOfFlight) => {
   if (airportOrigin[0].iata === "TXL" || airportOrigin[0].iata === "SXF") {
     airportOrigin[0].iata = "BER";
   }
-  
+
   if (airportDestination[0].iata === "TXL" || airportDestination[0].iata === "SXF") {
     airportDestination[0].iata = "BER";
   }
@@ -107,13 +86,5 @@ export const getFlight = (airportOrigin, airportDestination, dayOfFlight) => {
     }
   }
 
-  return(
-    fetch(url, options)
-    .then((response) => {
-    if (response.status !== 200) {
-      return console.log("An error happened!");
-    } else {
-     return response.json()}
-    })
-  );
+  return(fetchApiCall(url, options));
 }

@@ -1,9 +1,17 @@
+input {
+  padding: 10px;
+}
+
+
 .App {
   text-align: center;
   filter: alpha(opacity=60);
   background-color: #5F939A;
   color: white;
+  margin-bottom: -20px;
 }
+
+
 
 .App-logo {
   height: 40vmin;
@@ -59,6 +67,10 @@
   cursor: pointer;
 }
 
+.section-btn:focus {
+  color:#344648;
+}
+
 .text {
  font-size: 30px;
 }
@@ -69,6 +81,38 @@
   padding: 10px;
   margin-left: 30%;
   margin-right: 30%;
+
+}
+
+.card-flight {
+  border: solid #ffff 2px;
+  margin: 1rem;
+  padding: 30px;
+  margin-left: 20%;
+  margin-right: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-between;
+}
+
+.card-hotel {
+  border: solid #5F939A 2px;
+  margin: 1rem;
+  padding: 10px;
+  margin-left: 27%;
+  margin-right: 27%;
+  object-fit: contain;
+  /* height: auto; 
+  width: auto;  */
+  /* max-width: 300px; 
+  max-height: 300px; */
+
+}
+
+.card-hotel > img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .home,
@@ -132,7 +176,8 @@
     /* background-size: fill; */
     /* background-repeat: no-repeat; */
     color: #fff;
-    background-color: ;
+    background-color: #5F939A;
+    opacity: ;
     /* font-size: 100px; */
 
 }
@@ -142,10 +187,10 @@
     background-position: center;
     background-size: fill;
     background-repeat: no-repeat;
-    color: black;
+    color: #344648;
     text-align: center;
 
-    background-color: #ffffff;
+    background-color: #b8cfd2;
     filter: alpha(opacity=60);
 }
 
@@ -177,4 +222,42 @@
 input {
   width: 20%;
   border: 3px solid #5F939A;
+}
+
+.plane {
+  size: 50%;
+  height: 30%;
+  font-size: 50px;
+  max-width: 100%;
+  max-height: 100%;
+  line-height: 1.2em;
+  /* rotate: 40deg;
+  transform: rotate(40deg); */
+}
+
+.plane-departure {
+  size: 50%;
+  height: 30%;
+  rotate: 40deg;
+  transform: rotate(-40deg);
+  font-size: 30px;
+}
+
+.plane-arrival {
+  size: 50%;
+  height: 30%;
+  rotate: 40deg;
+  transform: rotate(40deg);
+  font-size: 30px;
+}
+
+.inline {
+  /* display: flex; */
+  /* flex-direction: row; */
+  justify-content: center;
+
+}
+
+.text-size {
+  font-size: large;
 }

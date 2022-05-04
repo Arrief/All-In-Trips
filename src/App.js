@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  
+import AboutUs from './components/pages/AboutUs';
 import Home from './components/pages/Home';
 import FlightStart from './components/pages/FlightStart';
 import HotelStart from './components/pages/HotelStart';
@@ -18,7 +19,7 @@ function App() {
           <Route path='/question' exact element={<Question/>} />
           <Route path='/flights' element={<FlightStart/>} />
           <Route path='/weather' element={<WeatherStart/>} />
-          <Route path='/hotels' element={<HotelStart/>} />
+          <Route path='/about-us' element={<AboutUs/>} />
         </Routes>
       </Router>
   );

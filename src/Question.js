@@ -1,11 +1,12 @@
 import React, {useContext} from 'react';
 import './App.css';
+import Weather from './components/pages/Weather';
+import { getCoordinates, getWeather, getHotels, getAirports, getFlight } from './functions/ApiFunctions';
 import { MyContext } from './context/MyProvider';
-import { getCoordinates, getWeather, getHotels, getAirport, getFlight } from './functions/ApiFunctions';
-import Button from './components/Button';
 import Flights from './components/pages/Flights';
 import Hotels from './components/pages/Hotels';
-import Weather from './components/pages/Weather';
+import Button from './components/Button';
+import Spinner from './components/Spinner';
 
 
 const Question = () => {
@@ -16,20 +17,17 @@ const Question = () => {
 
 
   // Function updating the state variables for check-in & check-out with the date the user selects:
-  const handleDate = (event) => {
-    if (event.currentTarget.id === "checkin") {
+  const handleInput = (event) => {
+    if (event.currentTarget.id === "from") {
+      context.setUserOrigin(event.currentTarget.value);
+    } else if(event.currentTarget.id === "to") {
+      context.setUserDestination(event.currentTarget.value)
+    } else if (event.currentTarget.id === "checkin") {
       context.setTravelDate(event.currentTarget.value);
     } else {
       context.setCheckoutDate(event.currentTarget.value)
     }
   }
-
-  // Function updating the state variables for origin & destination with the text the user types:
-  const handleInput = (event) => (
-    event.currentTarget.id === "from" 
-      ? context.setUserOrigin(event.currentTarget.value) 
-      : context.setUserDestination(event.currentTarget.value)
-  )
   
 
   // Main function to get all API data:
@@ -38,47 +36,39 @@ const Question = () => {
     event.preventDefault();
     // reset apiLoaded state to false again if the user already made a search before
     context.setApiLoaded(false);
+    // update state for the loading spinner
     context.setFormFilled(true);
-    // first get geo-coordinates from Geocoding API according to user input
-    getCoordinates(context.userDestination)
-    .then((coordsDestination) => {
-      // first, get weather for today and next 7 days from OpenWeather API with the coordinates
+    // first get geo-coordinates for origin & destination from Geocoding API according to user input
+    getCoordinates(context.userOrigin, context.userDestination)
+    .then(([coordsOrigin, coordsDestination]) => {
+      // second, get weather for today and next 7 days from OpenWeather API with the coordinates
       getWeather(coordsDestination)
       .then((dataWeather) => (context.setWeatherData(dataWeather)))
-      // second, use geo-coordinates from data to search hotel API with getHotels function
+      // third, use geo-coordinates from data to search hotel API with getHotels function
       getHotels(coordsDestination, context.travelDate, context.checkoutDate)
       .then((dataHotels) => {
         console.log(dataHotels.result);
         context.setHotelData(dataHotels.result)})
-      // console.log(dataHotels)});
-       // third, use use geo-coordinates again with userOrigin to search for airport IATA codes
-      getCoordinates(context.userOrigin)
-        .then((coordsOrigin) => {
-          getAirport(coordsOrigin)
-          .then(originIata => {
-            getAirport(coordsDestination)
-            .then(destIata => getFlight(originIata.items, destIata.items, context.travelDate)
+       // fourth, use the geo-coordinates again to search for airport IATA codes
+        getAirports(coordsOrigin, coordsDestination)
+          .then(([originIata, destIata]) => {
+            // fifth, use IATA codes & travel date to search cheap flights
+            getFlight(originIata.items, destIata.items, context.travelDate)
             .then(dataFlights => {
               console.log(dataFlights.data)
-              // console.log(dataFlights.data[0].conversion.EUR)
               context.setFlightsResult(dataFlights.data)
               // update state for API display, this API will be the last one to reply
               context.setApiLoaded(true);
               })
-            )
           })
-        }) 
-      });
-     // ! does not show when we want to display userOrigin/userDestination if uncommented!
-    // emptying the input field by resetting the state variable after getting the API results
-    // context.setUserOrigin("");
-    // context.setUserDestination("");
+      })
   }
 
   return (
     <>
     <div className="App">
       <Button style='section-btn' action={() => switchDisplay("main")} text="Search All" />
+      {/* Buttons only show after the user did a search */}
       {context.apiLoaded === true && 
       <>
         <Button style='section-btn' action={() => switchDisplay("weather")} text="Weather" />    
@@ -91,35 +81,56 @@ const Question = () => {
       <>
         <br />
         <form onSubmit={getCityInfo}>
-          {/* <div className='boxes'> */}
-          <input type="text" value={context.userOrigin} onChange={handleInput} placeholder="From..." id="from" required />
-          {/* Input updates userDestination state every time the user types something */}
-          <input type="text" value={context.userDestination} onChange={handleInput} placeholder="To..." id="to" required />
-          <input type="date" value={context.travelDate} onChange={handleDate} id="checkin" />
-          <input type="date" value={context.checkoutDate} onChange={handleDate} id="checkout" />
-          {/* </div> */}
-          {/* Button click sends userDestination as argument to function getCityInfo for API call */}
+          {/* Input fields update all states for the user data when the user types/selects & submits the form */}
+          <input 
+          type="text" 
+          value={context.userOrigin} 
+          onChange={handleInput} 
+          placeholder="From..." 
+          id="from" 
+          required />
+
+          <input 
+          type="text" 
+          value={context.userDestination} 
+          onChange={handleInput} 
+          placeholder="To..." 
+          id="to" 
+          required />
+
+          <input 
+          type="date" 
+          value={context.travelDate} 
+          onChange={handleInput} 
+          id="checkin" 
+          required />
+
+          <input 
+          type="date" 
+          value={context.checkoutDate} 
+          onChange={handleInput} 
+          id="checkout" 
+          required />
           <Button style='section-btn' text="Go!" />
           <br />
           <br />
-        
         </form>
         {/* Displaying API results only if user searched at least once */}
         {context.apiLoaded === true
           ?
           (<>
             <h3>You searched for a trip from {context.userOrigin} to {context.userDestination}</h3>
-            <p>Please check the according sections to see the weather forecast, suitable flights and the best hotels for your travel destination</p>
+            <p>Please check the according sections to see the weather forecast, suitable flights and the best hotels for your travel destination</p><br/> <br/>
           </>)
+          // loading spinner if the user submitted a search but API response has not arrived yet
           : (context.formFilled && (
-            <img
-              src="https://powerusers.microsoft.com/t5/image/serverpage/image-id/118082i204C32E01666789C?v=v2"
-              alt="loading spinner"
-            />
-          ))
+
+            <Spinner />
+          )) 
         }
       </>   
       }
+    {/* All sections with API results show after the user searched and all API data is available */}
      {context.apiLoaded === true &&
           <> 
             {context.currentSection === "weather" && <Weather />}

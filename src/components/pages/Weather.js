@@ -11,7 +11,6 @@ const Weather = () => {
       <div className='weather-container'>
         {/* <img src='/images/' autoPlay loop muted /> */}
         <div className='weather-text'>
-          <h1>Weather</h1>
           <br />
 
           <p><b>City:</b> {context.userDestination}</p>
@@ -31,6 +30,8 @@ const Weather = () => {
           )}
         </div>
       </div>
+      <br />
+      <br />
     </div>
   )
 };
