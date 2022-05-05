@@ -16,7 +16,10 @@ export const getCoordinates = function(origin, destination) {
 
   const urlDestination = `http://api.openweathermap.org/geo/1.0/direct?q=${destination}&appid=${process.env.REACT_APP_WEATHERKEY}`;
 
-  return Promise.all([fetchApiCall(urlOrigin), fetchApiCall(urlDestination)]);
+  return Promise.all([
+    fetchApiCall(urlOrigin), 
+    fetchApiCall(urlDestination)
+  ]);
 }
 
 
@@ -61,7 +64,10 @@ export const getAirports = (origin, destination) => {
     }
   }
 
-  return Promise.all([fetchApiCall(urlOrigin), fetchApiCall(urlDestination)]);
+  return Promise.all([
+    fetchApiCall(urlOrigin, options), 
+    fetchApiCall(urlDestination, options)
+  ]);
 }
 
 
