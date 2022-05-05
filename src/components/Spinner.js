@@ -10,11 +10,17 @@ const override = css`
 `;
 
 const Spinner = () => {
-  let [loading] = useState(true);
+  let [loading, setLoading] = useState(true);
+//   let [color, setColor] = useState("#ffffff");
 
   return (
     <div className="sweet-loading">
 
+        <div onClick={() => setLoading(!loading)}>Loading your trip results...</div>
+        <br />
+      {/* <input value={color} onChange={(input) => setColor(input.target.value)} placeholder="Color of the loader" /> */}
+
+        
       <BeatLoader color="#ffff" loading={loading} css={override} size={30} />
       <br />
     </div>

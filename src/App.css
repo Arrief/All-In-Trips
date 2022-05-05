@@ -1,7 +1,8 @@
 input {
   padding: 10px;
+  width: 20%;
+  border: 3px solid #5F939A;
 }
-
 
 .App {
   text-align: center;
@@ -11,13 +12,10 @@ input {
   margin-bottom: -20px;
 }
 
-
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -94,6 +92,29 @@ input {
   align-items: center;
   justify-content: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.card-about-text {
+  border: solid #5F939A 2px;
+  color:  #24464b;
+  margin: 1rem;
+  padding: 30px;
+  margin-left: 20%;
+  margin-right: 20%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.card-about-links {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .card-hotel {
@@ -103,11 +124,6 @@ input {
   margin-left: 27%;
   margin-right: 27%;
   object-fit: contain;
-  /* height: auto; 
-  width: auto;  */
-  /* max-width: 300px; 
-  max-height: 300px; */
-
 }
 
 .card-hotel > img {
@@ -128,7 +144,6 @@ input {
 }
 
 .flights {
-  /* background-image: src='./public/images/img-2.jpg'; */
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -137,7 +152,6 @@ input {
 }
 
 .flights-text {
-  /* background-image: url('/images/img-1.jpg'); */
   background-position: center;
   background-size: fill;
   background-repeat: no-repeat;
@@ -149,7 +163,6 @@ input {
 }
 
 .weather {
-  /* background-image: url('/images/img-1.jpg'); */
   background-position: center;
   background-size: fill;
   background-repeat: no-repeat;
@@ -157,9 +170,20 @@ input {
   font-size: 100px;
 }
 
-
 .weather-text {
-  /* background-image: url('/images/img-1.jpg'); */
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: black;
+  text-align: center;
+  opacity: 0.6;
+  background-color: #ffffff;
+  filter: alpha(opacity=60);
+}
+
+.about-text {
+  color: #24464b;
+  background-color: #5F939A;
   background-position: center;
   background-size: fill;
   background-repeat: no-repeat;
@@ -171,7 +195,6 @@ input {
 }
 
 .hotel-container {
-    /* background-image: url('/images/img-1.jpg'); */
     background-position: center;
     /* background-size: fill; */
     /* background-repeat: no-repeat; */
@@ -183,7 +206,6 @@ input {
 }
 
 .hotel-text {
-    /* background-image: url('/images/img-1.jpg'); */
     background-position: center;
     background-size: fill;
     background-repeat: no-repeat;
@@ -198,7 +220,6 @@ input {
   max-width:5px;
   height:auto;
   size-adjust: 20%;
-
 }
 
 .btn--outline {
@@ -217,11 +238,6 @@ input {
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
-}
-
-input {
-  width: 20%;
-  border: 3px solid #5F939A;
 }
 
 .plane {
@@ -255,7 +271,6 @@ input {
   /* display: flex; */
   /* flex-direction: row; */
   justify-content: center;
-
 }
 
 .text-size {

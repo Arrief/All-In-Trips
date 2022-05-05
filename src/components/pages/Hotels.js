@@ -6,7 +6,6 @@ import '../../App.css'
 const Hotels = () => {
   const context = useContext(MyContext);
 
-  // ! hotel video should not be in map, repeated for every element! Also need key!
   const mapHotelsOutput = (element, index) => {
     return (
             <div className='hotel-container'>

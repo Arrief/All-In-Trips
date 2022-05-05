@@ -8,11 +8,10 @@ const Weather = () => {
 
   return (
     <div className='App'>
-      <div className='weather-container'>
+
         {/* <img src='/images/' autoPlay loop muted /> */}
         <div className='weather-text'>
           <br />
-
           <p><b>City:</b> {context.userDestination}</p>
           <h3>Current Weather:</h3>
           <p><b>Sky:</b> {context.weatherData.current.weather[0].main}, {context.weatherData.current.weather[0].description} | <b>Temperature:</b> {context.weatherData.current.temp}°</p>
@@ -28,11 +27,12 @@ const Weather = () => {
               <img src={`http://openweathermap.org/img/wn/${element.weather[0].icon}.png`} alt="images of clouds" />
             </div>
           )}
-        </div>
+
       </div>
       <br />
       <br />
     </div>
+  
   )
 };
 

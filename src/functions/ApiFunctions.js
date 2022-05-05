@@ -1,9 +1,11 @@
+import ErrorPage from "../components/pages/ErrorPage";
+
 // Template for an API call with fetch
 const fetchApiCall = (url, options) =>
   fetch(url, options)
   .then((response) => {
-    if (response.status !== 200) {
-      return console.log("An error happened!");
+    if (response.json() === undefined) {
+      return <ErrorPage />;
     } else {
      return response.json()
     }
