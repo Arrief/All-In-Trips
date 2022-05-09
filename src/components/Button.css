@@ -2,6 +2,22 @@
     --primary: white
 }
 
+.btn-weather {
+    background-color: #b8cfd2;
+    border: 3px solid #5f939a;
+    font-weight: bold;
+    font-size: 13px;
+    margin-left: 5px;
+    padding: 12px;
+}
+
+.btn-weather:hover {
+    background-color: #79aab1;
+    border: 3px solid #3e6a70;
+    color:#344648;
+}
+
+
 .btn {
     padding: 8px 20px;
     border-radius: 2px;

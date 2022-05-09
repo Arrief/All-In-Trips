@@ -4,26 +4,24 @@ import ErrorPage from "../components/pages/ErrorPage";
 const fetchApiCall = (url, options) =>
   fetch(url, options)
   .then((response) => {
-    if (response.json() === undefined) {
+    if (response === undefined) {
       return <ErrorPage />;
     } else {
      return response.json()
     }
   });
 
-
 // Function to get the geo-coordinates for a city from OpenWeather Geocoding API
 export const getCoordinates = function(origin, destination) {
-  const urlOrigin = `http://api.openweathermap.org/geo/1.0/direct?q=${origin}&appid=${process.env.REACT_APP_WEATHERKEY}`;
+  const urlOrigin = `https://api.openweathermap.org/geo/1.0/direct?q=${origin}&appid=${process.env.REACT_APP_WEATHERKEY}`;
 
-  const urlDestination = `http://api.openweathermap.org/geo/1.0/direct?q=${destination}&appid=${process.env.REACT_APP_WEATHERKEY}`;
+  const urlDestination = `https://api.openweathermap.org/geo/1.0/direct?q=${destination}&appid=${process.env.REACT_APP_WEATHERKEY}`;
 
   return Promise.all([
     fetchApiCall(urlOrigin), 
     fetchApiCall(urlDestination)
   ]);
 }
-
 
 // Function to get weather forecast from OpenWeather OneCall API with geo-coordinates:
 export const getWeather = (destinationCoords) => {

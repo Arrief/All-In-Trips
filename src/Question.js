@@ -78,8 +78,7 @@ const Question = () => {
       }
        
       {context.currentSection === "main" &&
-      <>
-   
+      <section>
         <form onSubmit={getCityInfo}>
           {/* Input fields update all states for the user data when the user types/selects & submits the form */}
           <input 
@@ -118,17 +117,15 @@ const Question = () => {
         {/* Displaying API results only if user searched at least once */}
         {context.apiLoaded === true
           ?
-          (<>
+          (<article>
             <h3>You searched for a trip from {context.userOrigin} to {context.userDestination}</h3>
             <p>Please check the according sections to see the weather forecast, flights and the best hotels for your travel destination</p><br/> <br/>
-          </>)
+          </article>)
           // loading spinner if the user submitted a search but API response has not arrived yet
-          : (context.formFilled && (
-
-            <Spinner />
-          )) 
-               }
-          </>   
+          : context.formFilled &&
+            <Spinner /> 
+        }
+      </section>   
              }
             {/* All sections with API results show after the user searched and all API data is available */}
             {context.apiLoaded === true &&

@@ -11,26 +11,11 @@ h1 {
   width: 100%;
 }
 
-.cars__wrapper {
+.cards__wrapper {
   display: flex;
+  justify-content: space-evenly;
 }
 
-
-/* .cards__container {
-  display: flex;
-  flex-direction: row;
-  align-content: flex-start;
-  justify-content: center;
-  max-width: 1120px;
-  width: 90%;
-  margin: 0 auto;
-}   */
-
-/*   .cards__wrapper {
-  position: relative;
-  margin: 50px 0 45px;
-}  
-*/
 .cards__items {
   /* margin-bottom: 24px; */
   margin-right: 90px;
@@ -126,4 +111,19 @@ h1 {
   .cards__item {
     margin-bottom: 2rem;
   }
+}
+
+@media screen and (max-width: 485px) {
+  .cards__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 485px) {
+  .cards {
+    display:flex;
+    margin-left: 10px;
+  }
+  
 }

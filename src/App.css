@@ -83,23 +83,73 @@ input {
 }
 
 .card-flight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border: solid #ffff 2px;
   margin: 1rem;
   padding: 30px;
   margin-left: 20%;
   margin-right: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
+
+@media screen and (max-width: 960px) {
+  .card-flight {
+    /* display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between; */
+    box-sizing: content-box;
+    width: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 50% 50%;
+    border: solid #ffff 2px;
+    margin: 1rem;
+    padding: 30px;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+
+@media screen and (max-width: 820px) {
+  .card-flight {
+    /* display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between; */
+    box-sizing: content-box;
+    width: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 50% 50%;
+    border: solid #ffff 2px;
+    margin: 1rem;
+    padding: 30px;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+@media screen and (max-width: 485px) {
+  .card-flight {
+    gap: 10px;
+  }
+
+  .card-flight > * {
+    padding: 10px;
+  }
+}
+
 
 .card-about-text {
   border: solid #5F939A 2px;
   color:  #24464b;
-  margin: 1rem;
   padding: 30px;
+  margin-top: 3rem;
   margin-left: 20%;
   margin-right: 20%;
   display: flex;
@@ -187,7 +237,6 @@ input {
   background-position: center;
   background-size: fill;
   background-repeat: no-repeat;
-  color: black;
   text-align: center;
   opacity: 0.6;
   background-color: #ffffff;
@@ -195,25 +244,25 @@ input {
 }
 
 .hotel-container {
-    background-position: center;
-    /* background-size: fill; */
-    /* background-repeat: no-repeat; */
-    color: #fff;
-    background-color: #5F939A;
-    opacity: ;
-    /* font-size: 100px; */
+  background-position: center;
+  /* background-size: fill; */
+  /* background-repeat: no-repeat; */
+  color: #fff;
+  background-color: #5F939A;
+  /* opacity: ; */
+  /* font-size: 100px; */
 
 }
 
 .hotel-text {
-    background-position: center;
-    background-size: fill;
-    background-repeat: no-repeat;
-    color: #344648;
-    text-align: center;
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: #344648;
+  text-align: center;
 
-    background-color: #b8cfd2;
-    filter: alpha(opacity=60);
+  background-color: #b8cfd2;
+  filter: alpha(opacity=60);
 }
 
 .img {
@@ -247,6 +296,7 @@ input {
   max-width: 100%;
   max-height: 100%;
   line-height: 1.2em;
+  margin: 10px;
   /* rotate: 40deg;
   transform: rotate(40deg); */
 }

@@ -91,7 +91,7 @@
   }
 
   .nav-menu.active {
-    background: #242222;
+    background: #5F939A;
     left: 0;
     opacity: 1;
     transition: all 0.5s ease;
@@ -107,7 +107,7 @@
 
   .nav-links:hover {
     background-color: #fff;
-    color: #242424;
+    color: #5F939A;
     border-radius: 0;
   }
 
