@@ -25,7 +25,11 @@ const Navbar = () => {
 
   return (
     <nav className='navbar'>
+      <Link to="/">
+      <img className='logo' src="./favicon2.png" alt="logo image"/>
+      </Link>
       <div className="navbar-container">
+
         <Link to ="/" className="navbar-logo">
           All In Trips
         </Link>

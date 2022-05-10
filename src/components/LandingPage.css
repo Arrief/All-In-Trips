@@ -56,6 +56,10 @@ margin-left: 4px;
   font-size: 70px;
   margin-top: -150px;
 }
+.subtext {
+  font-size: 30px;
+  }
+
 }
 
 @media screen and (max-width: 768px) {
@@ -63,18 +67,30 @@ margin-left: 4px;
   font-size: 50px;
   margin-top: -100px;
 }
+
+.subtext {
+  font-size: 30px;
+  }
 }
 
 @media screen and (max-width: 485px) {
 .landing-container > h1 {
   font-size: 50px;
-  margin-top: -100px;
+  margin-top: -120px;
+}
+
+.subtext {
+font-size: 30px;
 }
 }
 
 .landing-container > p {
   font-size: 30px;
 }
+
+.subtext > p {
+  font-size: 30px;
+  }
 
 .btn-mobile {
   display: block;

@@ -111,11 +111,11 @@
     border-radius: 0;
   }
 
-  .navbar-logo {
+  .logo {
     position: absolute;
     top: 0;
     left: 0;
-    transform: translate(25%, 50%);
+    transform: translate(45%, 20%);
   }
 
   .menu-icon {
@@ -152,5 +152,22 @@
     background: #fff;
     color: #242424;
     transition: 250ms;
+  }
+}
+
+.logo {
+  width: 50px;
+  height: 40px;
+  cursor: pointer;
+}
+
+  
+@media screen and (max-width: 960px) {
+  .logo {
+    position: absolute;
+    left: 7px;
+    top: 10px;
+    height: 40px;
+    width: 40px;
   }
 }

@@ -21,6 +21,8 @@ You can also sort the result based on your preferences, for example to see the s
 
 Live demo on Netlify: https://all-in-trips.netlify.app/
 
+<img src="./public/images/screenshot1.png" width="600" height="400">
+
 ## Installation
 If you want to run the code locally, you have to register on the websites of the API providers, listed below, and request your own API keys. Once you have them, replace the fake values inside the file **.env.sample** with your keys and rename the file into **.env**. 
 
@@ -54,3 +56,9 @@ After that you can open your terminal, cd into the project directory and run the
 
 ## Development
 This project was created in a time span of one month as a part of [Wild Code School's](https://www.wildcodeschool.com/en-GB) web development bootcamp.
+
+## Possibilites for the future
+- Optimize the responsive layout for phones
+- Implement map API for hotels
+- Convert airline IATA codes to airline names with another API 
+- Create a 404 page/component if the API calls fail
