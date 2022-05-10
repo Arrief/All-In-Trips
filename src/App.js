@@ -6,8 +6,6 @@ import Navbar from './components/Navbar';
 import Question from './Question';
 import WeatherStart from './components/pages/WeatherStart';
 import AboutUs from './components/pages/AboutUs';
-import Flights from './components/pages/Flights';
-import Hotels from './components/pages/Hotels';
 
 function App() {
 
